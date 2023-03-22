@@ -1,0 +1,5 @@
+/.vscode/
+/composer.lock
+/demo/demo.log
+/tests.log
+/vendor/

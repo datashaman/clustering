@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Demo Page</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <link rel="stylesheet" href="/cluster.css" />
+    <style>
+      html, body, #map {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script>
+      function getJSON(url, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.onload = function () {
+          if (xhr.readyState === 4 && xhr.status >= 200 && xhr.status < 300 && xhr.response) {
+            callback(xhr.response);
+          }
+        };
+        xhr.send();
+      }
+
+      function createClusterIcon(feature, latlng) {
+        if (!feature.properties.cluster) return L.marker(latlng);
+
+        const count = feature.properties.point_count;
+        const size =
+            count < 100 ? 'small' :
+            count < 1000 ? 'medium' : 'large';
+        const icon = L.divIcon({
+            html: `<div><span>${  feature.properties.point_count_abbreviated  }</span></div>`,
+            className: `marker-cluster marker-cluster-${  size}`,
+            iconSize: L.point(40, 40)
+        });
+
+        return L.marker(latlng, {icon});
+      }
+
+      const map = L.map('map').setView([0, 0], 2);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      const markers = L.geoJson(null, {
+        pointToLayer: createClusterIcon
+      }).addTo(map);
+
+      const bounds = map.getBounds();
+      const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+      const zoom = map.getZoom();
+
+      const now = Date.now();
+
+      getJSON(`/features.php?bbox=${bbox}&zoom=${zoom}&log=true&extent=256&radius=60&maxZoom=17`, (data) => {
+        console.log(`loaded ${data.features.length} points JSON in ${(Date.now() - now) / 1000}s`);
+
+        markers.clearLayers();
+        markers.addData(data.features);
+      });
+    </script>
+  </body>
+</html>

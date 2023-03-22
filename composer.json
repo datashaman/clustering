@@ -1,0 +1,43 @@
+{
+    "name": "datashaman/supercluster-php",
+    "license": "ISC",
+    "type": "library",
+    "keywords": [
+        "algorithm",
+        "maps",
+        "clustering",
+        "computational-geometry"
+    ],
+    "authors": [
+        {
+            "name": "Marlin Forbes",
+            "email": "marlinf@datashaman.com"
+        }
+    ],
+    "require": {
+        "opis/closure": "^3.6",
+        "php-ds/php-ds": "^1.4",
+        "phpunit/php-timer": "^5 || ^6",
+        "psr/log": "*"
+    },
+    "require-dev": {
+        "monolog/monolog": "^3.3",
+        "phpunit/phpunit": "^10.0",
+        "symfony/var-dumper": "^6.2"
+    },
+    "suggest": {
+        "ext-ds": "to improve performance and reduce memory usage",
+        "monolog/monolog": "Allows logging of the clustering flow"
+    },
+    "autoload": {
+        "psr-4": {
+            "Datashaman\\Supercluster\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Datashaman\\Supercluster\\Tests\\": "tests/"
+        }
+    },
+    "description:": "A very fast geospatial point clustering library for PHP, based on supercluster."
+}
