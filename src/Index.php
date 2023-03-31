@@ -462,7 +462,7 @@ class Index implements LoggerAwareInterface
         if ($count >= 10000) {
             $abbrev = round($count / 1000) . 'k';
         } elseif ($count >= 1000) {
-            $abbrev = round($count / 100) * 10 . 'k';
+            $abbrev = round($count / 100) / 10 . 'k';
         } else {
             $abbrev = $count;
         }
