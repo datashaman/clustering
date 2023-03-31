@@ -49,7 +49,7 @@ class IndexTest extends TestCase
                 'I. de Cozumel',
                 'Grand Cayman',
                 'Miquelon',
-                'Cape Bauld'
+                'Cape Bauld',
             ],
             $leafNames
         );
@@ -63,7 +63,7 @@ class IndexTest extends TestCase
             fn ($f) => $f['id'],
             array_filter(
                 $features,
-                fn ($f) => !$f['tags']['cluster']
+                fn ($f) => ! $f['tags']['cluster']
             )
         );
 

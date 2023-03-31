@@ -50,7 +50,7 @@ class KDBush
         $stack = new Stack([0, count($this->ids) - 1, 0]);
         $result = new Vector();
 
-        while (!$stack->isEmpty()) {
+        while (! $stack->isEmpty()) {
             $axis = $stack->pop();
             $right = $stack->pop();
             $left = $stack->pop();
@@ -97,7 +97,7 @@ class KDBush
         $result = new Vector();
         $r2 = $r * $r;
 
-        while (!$stack->isEmpty()) {
+        while (! $stack->isEmpty()) {
             $axis = $stack->pop();
             $right = $stack->pop();
             $left = $stack->pop();

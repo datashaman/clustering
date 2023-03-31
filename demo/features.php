@@ -4,9 +4,9 @@ require_once '../vendor/autoload.php';
 
 use Datashaman\Supercluster\Index;
 use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 function getIndex(): Index {
     $params = [

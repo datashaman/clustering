@@ -67,7 +67,7 @@ class KDBushTest extends TestCase
 
         foreach (static::IDS as $id) {
             $p = static::POINTS[$id];
-            if (!$result->contains($id) && $this->sqDist($p, $qp) <= $r2) {
+            if (! $result->contains($id) && $this->sqDist($p, $qp) <= $r2) {
                 throw new Exception('Result point not in range');
             }
         }

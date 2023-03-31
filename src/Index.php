@@ -81,7 +81,7 @@ class Index implements LoggerAwareInterface
 
         foreach ($this->points as $index => $point) {
             $geometry = $point['geometry'] ?? null;
-            if (!$geometry) {
+            if (! $geometry) {
                 continue;
             }
             $clusters->push($this->createPointCluster($point, $index));
@@ -196,12 +196,12 @@ class Index implements LoggerAwareInterface
         $originZoom = $this->_getOriginZoom($clusterId);
 
         $index = $this->getTree($originZoom, false);
-        if (!$index) {
+        if (! $index) {
             throw new Exception("Index not found for {$originZoom}");
         }
 
         $origin = $index->points[$originId];
-        if (!$origin) {
+        if (! $origin) {
             throw new Exception("No cluster with the specificed ID {$originId}");
         }
 
@@ -218,7 +218,7 @@ class Index implements LoggerAwareInterface
             }
         }
 
-        if (!$children) {
+        if (! $children) {
             throw new Exception("Cluster has no children");
         }
 
@@ -325,6 +325,24 @@ class Index implements LoggerAwareInterface
         return $clusters;
     }
 
+    public function getClusterExpansionZoom(int $clusterId): int
+    {
+        $expansionZoom = $this->_getOriginZoom($clusterId) - 1;
+
+        while ($expansionZoom <= $this->options->maxZoom) {
+            $children = $this->getChildren($clusterId);
+            $expansionZoom++;
+
+            if (count($children) !== 1) {
+                break;
+            }
+
+            $clusterId = $children[0]['properties']['cluster_id'];
+        }
+
+        return $expansionZoom;
+    }
+
     protected function startTimer(string $id): void
     {
         $timer = $this->timers[$id] = new Timer();
@@ -383,7 +401,7 @@ class Index implements LoggerAwareInterface
             'y' => $this->latY($y),
             'zoom' => INF, // the last zoom the point was processed at
             'index' => $index, // index of the source feature in the original input array,
-            'parentId' => -1 // parent cluster id
+            'parentId' => -1, // parent cluster id
         ]);
     }
 
@@ -465,7 +483,7 @@ class Index implements LoggerAwareInterface
                     $b['parentId'] = $id;
 
                     if ($this->options['reduce']) {
-                        if (!$clusterProperties) {
+                        if (! $clusterProperties) {
                             $clusterProperties = $this->_map($p, true);
                         }
                         $this->options['reduce']($clusterProperties, $this->_map($b));
@@ -546,7 +564,7 @@ class Index implements LoggerAwareInterface
                 'type' => 1,
                 'geometry' => [[
                     (int) round($this->options->extent * ($px * $z2 - $x)),
-                    (int) round($this->options->extent * ($py * $z2 - $y))
+                    (int) round($this->options->extent * ($py * $z2 - $y)),
                 ]],
                 'tags' => $tags,
             ];
@@ -561,7 +579,7 @@ class Index implements LoggerAwareInterface
                 $id = $this->points[$c['index']]['id'];
             }
 
-            if (!is_null($id)) {
+            if (! is_null($id)) {
                 $f['id'] = $id;
             }
 
