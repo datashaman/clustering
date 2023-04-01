@@ -124,7 +124,7 @@ class Index implements LoggerAwareInterface
         return $this;
     }
 
-    public function getChildren(int $clusterId)
+    public function getChildren(int $clusterId): array
     {
         $originId = $this->getOriginId($clusterId);
         $originZoom = $this->getOriginZoom($clusterId);
@@ -216,7 +216,7 @@ class Index implements LoggerAwareInterface
         return $expansionZoom;
     }
 
-    public function getLeaves(int $clusterId, int $limit = 10, int $offset = 0)
+    public function getLeaves(int $clusterId, int $limit = 10, int $offset = 0): Vector
     {
         $leaves = new Vector();
         $this->appendLeaves($leaves, $clusterId, $limit, $offset, 0);
@@ -295,7 +295,7 @@ class Index implements LoggerAwareInterface
         int $limit, 
         int $offset, 
         int $skipped
-    ) {
+    ): int {
         $children = $this->getChildren($clusterId);
 
         foreach ($children as $child) {
@@ -332,12 +332,12 @@ class Index implements LoggerAwareInterface
         return $skipped;
     }
 
-    protected function getOriginId(int $clusterId)
+    protected function getOriginId(int $clusterId): int
     {
         return ($clusterId - count($this->points)) >> 5;
     }
 
-    protected function getOriginZoom(int $clusterId)
+    protected function getOriginZoom(int $clusterId): int
     {
         return ($clusterId - count($this->points)) % 32;
     }
@@ -374,8 +374,7 @@ class Index implements LoggerAwareInterface
         $sin = sin($lat * M_PI / 180);
         $y = 0.5 - 0.25 * log((1 + $sin) / (1 - $sin)) / M_PI;
 
-        return $y < 0 ? 0
-            : ($y > 1 ? 1 : $y);
+        return $y < 0 ? 0 : ($y > 1 ? 1 : $y);
     }
 
     protected function xLng(float $x)
