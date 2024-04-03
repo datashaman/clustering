@@ -170,8 +170,8 @@ class Index implements LoggerAwareInterface
             $minLng = -180;
             $maxLng = 180;
         } else if ($minLng > $maxLng) {
-            $easternHem = $this->getClusters([$minLng, $minLat, 180, $maxLat], $zoom);
-            $westernHem = $this->getClusters([-180, $minLat, $maxLng, $maxLat], $zoom);
+            $easternHem = $this->getClusters($zoom, [$minLng, $minLat, 180, $maxLat], $zoom);
+            $westernHem = $this->getClusters($zoom, [-180, $minLat, $maxLng, $maxLat], $zoom);
 
             return array_merge(
                 $easternHem,
@@ -240,8 +240,8 @@ class Index implements LoggerAwareInterface
             $tree->range(($x - $p) / $z2, $top, ($x + 1 + $p) / $z2, $bottom),
             $tree->points,
             $x,
-            $y, 
-            $z2, 
+            $y,
+            $z2,
             $tile
         );
 
@@ -250,8 +250,8 @@ class Index implements LoggerAwareInterface
                 $tree->range(1 - $p / $z2, $top, 1, $bottom),
                 $tree->points,
                 $z2,
-                $y, 
-                $z2, 
+                $y,
+                $z2,
                 $tile
             );
         }
@@ -259,9 +259,9 @@ class Index implements LoggerAwareInterface
             $this->addTileFeatures(
                 $tree->range(0, $top, $p / $z2, $bottom),
                 $tree->points,
-                -1, 
-                $y, 
-                $z2, 
+                -1,
+                $y,
+                $z2,
                 $tile
             );
         }
@@ -291,9 +291,9 @@ class Index implements LoggerAwareInterface
 
     protected function appendLeaves(
         Vector $result,
-        int $clusterId, 
-        int $limit, 
-        int $offset, 
+        int $clusterId,
+        int $limit,
+        int $offset,
         int $skipped
     ): int {
         $children = $this->getChildren($clusterId);
@@ -311,7 +311,7 @@ class Index implements LoggerAwareInterface
                         $result,
                         $props['cluster_id'],
                         $limit,
-                        $offset, 
+                        $offset,
                         $skipped
                     );
                     // exit the cluster
@@ -393,7 +393,7 @@ class Index implements LoggerAwareInterface
         Vector $points,
         int $x,
         int $y,
-        int $z2, 
+        int $z2,
         array &$tile
     ) {
         foreach ($ids as $i) {
@@ -476,7 +476,7 @@ class Index implements LoggerAwareInterface
             ]
         );
     }
-    
+
     protected function clusterPoints(Vector $points, int $zoom): Vector
     {
         $clusters = new Vector();
@@ -545,7 +545,7 @@ class Index implements LoggerAwareInterface
                     $wx / $numPoints,
                     $wy / $numPoints,
                     $id,
-                    $numPoints, 
+                    $numPoints,
                     $clusterProperties
                 );
             } else {
